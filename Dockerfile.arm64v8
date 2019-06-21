@@ -1,6 +1,6 @@
 # djaydev/glass-isc-dhcp
 
-FROM arm64v8/ubuntu AS builder
+FROM balenalib/artik710-ubuntu AS builder
 
 RUN [ "cross-build-start" ]
 
@@ -24,7 +24,7 @@ RUN cd /tmp/dhcpd-pools && \
 
 RUN [ "cross-build-end" ]
 
-FROM arm64v8/node:8.16-alpine
+FROM balenalib/artik710-alpine-node
 
 RUN [ "cross-build-start" ]
 
