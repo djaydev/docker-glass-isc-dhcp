@@ -1,5 +1,7 @@
 # djaydev/glass-isc-dhcp
 
+RUN [ "cross-build-start" ]
+
 FROM arm64v8/ubuntu AS builder
 
 RUN \
@@ -90,3 +92,5 @@ RUN chmod +x /startapp.sh
 
 EXPOSE 67/udp 67/tcp 3000/tcp
 ENTRYPOINT ["/startapp.sh"]
+
+RUN [ "cross-build-end" ]
