@@ -1,3 +1,5 @@
+# djaydev/glass-isc-dhcp
+
 FROM ubuntu AS builder
 
 RUN \
@@ -78,7 +80,9 @@ COPY --from=builder /usr/local/bin/dhcpd-pools /opt/glass-isc-dhcp/bin/
 
 RUN ["touch", "/var/lib/dhcp/dhcpd.leases"]
 
-ENV ADMINPASSWORD=glassadmin
+ENV ADMINPASSWORD=glassadmin \
+    WEBSOCKETPORT=8080 \
+    WEBADMINPORT=3000
 
 # Copy the start script.
 COPY startapp.sh /startapp.sh
