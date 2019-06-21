@@ -1,8 +1,8 @@
 # djaydev/glass-isc-dhcp
 
-RUN [ "cross-build-start" ]
-
 FROM arm64v8/ubuntu AS builder
+
+RUN [ "cross-build-start" ]
 
 RUN \
     apt update && \
@@ -22,7 +22,11 @@ RUN cd /tmp/dhcpd-pools && \
     make check && \
     make install
 
+RUN [ "cross-build-end" ]
+
 FROM arm64v8/node:8.16-alpine
+
+RUN [ "cross-build-start" ]
 
 WORKDIR /opt
 RUN apk --no-cache add dhcp git bash libtool && \
