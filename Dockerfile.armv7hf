@@ -1,4 +1,4 @@
-# djaydev/glass-isc-dhcp
+# djaydev/glass-isc-dhcp:armv7hf
 
 FROM balenalib/raspberrypi3-ubuntu AS builder
 
