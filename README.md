@@ -14,7 +14,7 @@ Host or MACVLAN networking is recommended.
 ```
 docker run -d \
     --name=glass-isc-dhcp \
-    --network="host"
+    --network="host" \
     -v /docker/appdata/glass-isc-dhcp:/etc/dhcp:rw \
     -v /docker/appdata/glass-isc-dhcp/leases:/var/lib/dhcp:rw \
     -e ADMINPASSWORD=glassadmin \
