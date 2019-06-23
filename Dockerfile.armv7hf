@@ -1,0 +1,61 @@
+# djaydev/glass-isc-dhcp
+
+FROM balenalib/raspberrypi3-ubuntu AS builder
+
+RUN [ "cross-build-start" ]
+
+RUN \
+    apt update && \
+    apt install -y git wget libtool automake autoconf unzip build-essential
+
+WORKDIR /tmp
+
+RUN git clone https://github.com/Akkadius/dhcpd-pools.git && \
+    wget https://github.com/troydhanson/uthash/archive/master.zip && \
+    unzip master.zip
+
+RUN cd /tmp/dhcpd-pools && \
+    cp README.md README && \
+    ./bootstrap && \
+    ./configure --with-uthash=/tmp/uthash-master/include && \
+    make && \
+    make check && \
+    make install
+
+RUN [ "cross-build-end" ]
+
+FROM balenalib/raspberrypi3-debian-node:8.16-latest
+
+RUN [ "cross-build-start" ]
+
+WORKDIR /opt
+RUN apt update && \
+    apt install --no-install-recommends -y isc-dhcp-server git bash && \
+    git clone https://github.com/Akkadius/glass-isc-dhcp.git && \
+    cd glass-isc-dhcp && \
+    mkdir logs && \
+    chmod u+x ./bin/ -R && \
+    chmod u+x *.sh && \
+    npm install && \
+    npm install forever -g && \
+    apt-get remove git -y && \
+    apt-get autoremove -y && \
+    apt-get autoclean -y && \
+    apt-get clean -y && \
+    apt-get purge -y && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+COPY --from=builder /usr/local/bin/dhcpd-pools /opt/glass-isc-dhcp/bin/
+
+ENV ADMINPASSWORD=glassadmin \
+    WEBSOCKETPORT=8080 \
+    WEBADMINPORT=3000
+
+# Copy the start script.
+COPY startapp.sh /startapp.sh
+RUN chmod +x /startapp.sh
+
+EXPOSE 67/udp 67/tcp 3000/tcp
+ENTRYPOINT ["/startapp.sh"]
+
+RUN [ "cross-build-end" ]
