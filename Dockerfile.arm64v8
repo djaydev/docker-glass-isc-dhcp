@@ -24,7 +24,7 @@ RUN cd /tmp/dhcpd-pools && \
 
 RUN [ "cross-build-end" ]
 
-FROM balenalib/artik710-alpine-node
+FROM balenalib/artik710-alpine-node:8.16-latest
 
 RUN [ "cross-build-start" ]
 
