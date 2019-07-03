@@ -78,8 +78,6 @@ RUN ALPINE_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases
 
 COPY --from=builder /usr/local/bin/dhcpd-pools /opt/glass-isc-dhcp/bin/
 
-RUN ["touch", "/var/lib/dhcp/dhcpd.leases"]
-
 ENV ADMINPASSWORD=glassadmin \
     WEBSOCKETPORT=8080 \
     WEBADMINPORT=3000
