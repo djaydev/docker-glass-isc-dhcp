@@ -1,12 +1,10 @@
 # djaydev/glass-isc-dhcp:armv7hf
 
-FROM balenalib/raspberrypi3-ubuntu AS builder
+FROM balenalib/raspberrypi3-alpine AS builder
 
 RUN [ "cross-build-start" ]
 
-RUN \
-    apt update && \
-    apt install -y git wget libtool automake autoconf unzip build-essential
+RUN apk add git wget libtool automake autoconf unzip build-base libc6-compat uthash coreutils
 
 WORKDIR /tmp
 
@@ -24,26 +22,22 @@ RUN cd /tmp/dhcpd-pools && \
 
 RUN [ "cross-build-end" ]
 
-FROM balenalib/raspberrypi3-debian-node:8.16-latest
+FROM balenalib/raspberrypi3-alpine-node:8.16-latest
 
 RUN [ "cross-build-start" ]
 
 WORKDIR /opt
-RUN apt update && \
-    apt install --no-install-recommends -y isc-dhcp-server git bash && \
+RUN apk --no-cache add dhcp git bash libtool libc6-compat && \
     git clone https://github.com/Akkadius/glass-isc-dhcp.git && \
     cd glass-isc-dhcp && \
     mkdir logs && \
     chmod u+x ./bin/ -R && \
     chmod u+x *.sh && \
+    npm config set unsafe-perm true && \
     npm install && \
     npm install forever -g && \
-    apt-get remove git -y && \
-    apt-get autoremove -y && \
-    apt-get autoclean -y && \
-    apt-get clean -y && \
-    apt-get purge -y && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    apk del git libtool && \
+    rm -rf /var/cache/apk/* /tmp/* /tmp/.[!.]*
 
 COPY --from=builder /usr/local/bin/dhcpd-pools /opt/glass-isc-dhcp/bin/
 
