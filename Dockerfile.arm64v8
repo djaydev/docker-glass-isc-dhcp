@@ -1,12 +1,10 @@
 # djaydev/glass-isc-dhcp
 
-FROM balenalib/artik710-ubuntu AS builder
+FROM balenalib/generic-aarch64-alpine AS builder
 
 RUN [ "cross-build-start" ]
 
-RUN \
-    apt update && \
-    apt install -y git wget libtool automake autoconf unzip build-essential
+RUN apk add git wget libtool automake autoconf unzip build-base libc6-compat uthash coreutils
 
 WORKDIR /tmp
 
@@ -24,30 +22,22 @@ RUN cd /tmp/dhcpd-pools && \
 
 RUN [ "cross-build-end" ]
 
-FROM balenalib/artik710-alpine-node:8.16-latest
+FROM balenalib/generic-aarch64-alpine-node:8.16-latest
 
 RUN [ "cross-build-start" ]
 
 WORKDIR /opt
-RUN apk --no-cache add dhcp git bash curl libtool && \
+RUN apk --no-cache add dhcp git bash libtool libc6-compat && \
     git clone https://github.com/Akkadius/glass-isc-dhcp.git && \
     cd glass-isc-dhcp && \
     mkdir logs && \
     chmod u+x ./bin/ -R && \
     chmod u+x *.sh && \
+    npm config set unsafe-perm true && \
     npm install && \
     npm install forever -g && \
     apk del git libtool && \
     rm -rf /var/cache/apk/* /tmp/* /tmp/.[!.]*
-
-ENV LANG=C.UTF-8
-
-RUN apk --no-cache add curl && \
-    curl -Lo glibc-2.26-r1.apk https://raw.githubusercontent.com/athalonis/docker-alpine-rpi-glibc-builder/master/glibc-2.26-r1.apk && \
-    curl -Lo glibc-bin-2.26-r1.apk https://raw.githubusercontent.com/athalonis/docker-alpine-rpi-glibc-builder/master/glibc-bin-2.26-r1.apk && \
-    apk add --allow-untrusted *.apk && \
-    apk del curl && \
-    rm -rf *.apk /var/cache/apk/* /tmp/* /tmp/.[!.]*
 
 COPY --from=builder /usr/local/bin/dhcpd-pools /opt/glass-isc-dhcp/bin/
 
