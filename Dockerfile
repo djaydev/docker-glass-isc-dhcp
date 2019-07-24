@@ -21,7 +21,7 @@ RUN cd /tmp/dhcpd-pools && \
 FROM node:8.16-alpine
 
 WORKDIR /opt
-RUN apk --no-cache add dhcp git bash libtool libc6-compat && \
+RUN apk --no-cache add dhcp tini git bash libtool libc6-compat && \
     git clone https://github.com/Akkadius/glass-isc-dhcp.git && \
     cd glass-isc-dhcp && \
     mkdir logs && \
@@ -44,4 +44,6 @@ COPY startapp.sh /startapp.sh
 RUN chmod +x /startapp.sh
 
 EXPOSE 67/udp 67/tcp 3000/tcp
-ENTRYPOINT ["/startapp.sh"]
+ENTRYPOINT ["/sbin/tini", "--"]
+
+CMD ["/startapp.sh"]
