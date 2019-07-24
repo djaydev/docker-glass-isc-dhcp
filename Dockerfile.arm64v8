@@ -37,7 +37,7 @@ RUN apk --no-cache add dhcp tini git bash libtool libc6-compat && \
     npm install && \
     npm install forever -g && \
     apk del git libtool && \
-    rm -rf /var/cache/apk/* /tmp/* /tmp/.[!.]*
+    rm -rf /var/cache/apk/* /tmp/* /tmp/.[!.]* /opt/glass-isc-dhcp/.git
 
 COPY --from=builder /usr/local/bin/dhcpd-pools /opt/glass-isc-dhcp/bin/
 
