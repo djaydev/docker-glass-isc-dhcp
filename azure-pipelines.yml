@@ -1,7 +1,0 @@
-# Starter pipeline
-- task: Docker@2
-  inputs:
-    containerRegistry: 'djaydev hub.docker'
-    repository: 'djaydev/glass-isc-dhcp'
-    command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
