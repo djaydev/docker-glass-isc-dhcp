@@ -1,0 +1,2 @@
+#!/usr/bin/with-contenv sh
+/usr/sbin/dhcpd -4 -f -d --no-pid -cf /etc/dhcp/dhcpd.conf > /var/log/dhcp.log 2>&1
