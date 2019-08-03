@@ -40,6 +40,6 @@ ENV ADMINPASSWORD=glassadmin \
 
 # Copy scripts.
 COPY rootfs/ /
-COPY startapp.sh /startapp.sh
+COPY startappx86.sh /startapp.sh
 
 EXPOSE 67/udp 67/tcp 3000/tcp

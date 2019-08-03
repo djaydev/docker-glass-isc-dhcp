@@ -46,7 +46,7 @@ ENV ADMINPASSWORD=glassadmin \
     WEBADMINPORT=3000
 
 # Copy the start script.
-COPY startapp.sh /startapp.sh
+COPY startapparm.sh /startapp.sh
 RUN chmod +x /startapp.sh
 
 EXPOSE 67/udp 67/tcp 3000/tcp
