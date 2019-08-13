@@ -12,7 +12,8 @@ For a sample config file, see <https://github.com/djaydev/docker-glass-isc-dhcp/
 
 Host or MACVLAN networking is recommended.
 
-```docker run -d \
+```shell
+    docker run -d \
     --name=glass-isc-dhcp \
     --network="host" \
     -v /docker/appdata/glass-isc-dhcp:/etc/dhcp:rw \
