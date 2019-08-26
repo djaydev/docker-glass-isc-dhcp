@@ -4,7 +4,7 @@ FROM balenalib/generic-aarch64-alpine AS builder
 
 RUN [ "cross-build-start" ]
 
-RUN apk add git wget libtool automake autoconf unzip build-base libc6-compat uthash coreutils
+RUN apk add git wget libtool automake autoconf unzip build-base libc6-compat coreutils
 
 WORKDIR /tmp
 
@@ -33,7 +33,6 @@ RUN apk --no-cache add dhcp git bash libtool libc6-compat && \
     mkdir logs && \
     chmod u+x ./bin/ -R && \
     chmod u+x *.sh && \
-    npm config set unsafe-perm true && \
     npm install && \
     npm install forever -g && \
     apk del git libtool && \
