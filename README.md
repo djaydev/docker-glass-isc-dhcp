@@ -16,6 +16,7 @@ Host or MACVLAN networking is recommended.
     docker run -d \
     --name=glass-isc-dhcp \
     --network="host" \
+    -e TZ=America/New_York
     -v /docker/appdata/glass-isc-dhcp:/etc/dhcp:rw \
     -v /docker/appdata/glass-isc-dhcp/leases:/var/lib/dhcp:rw \
     -e ADMINPASSWORD=glassadmin \
@@ -26,6 +27,7 @@ Host or MACVLAN networking is recommended.
 
 Where:
 
+- `TZ`: your timezone
 - `/docker/appdata/glass-isc-dhcp`: dhcpd.conf folder
 - `/docker/appdata/glass-isc-dhcp/leases`: optional folder for persistent leases
 - `ADMINPASSWORD`: optional Glass Web password, default glassadmin
