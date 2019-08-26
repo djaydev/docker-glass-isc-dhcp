@@ -4,7 +4,7 @@ FROM balenalib/raspberrypi3-alpine AS builder
 
 RUN [ "cross-build-start" ]
 
-RUN apk add git wget libtool automake autoconf unzip build-base libc6-compat uthash coreutils
+RUN apk add git wget libtool automake autoconf unzip build-base libc6-compat coreutils
 
 WORKDIR /tmp
 
@@ -22,12 +22,12 @@ RUN cd /tmp/dhcpd-pools && \
 
 RUN [ "cross-build-end" ]
 
-FROM balenalib/raspberrypi3-alpine-node:8.16-latest
+FROM balenalib/raspberrypi3-alpine
 
 RUN [ "cross-build-start" ]
 
 WORKDIR /opt
-RUN apk --no-cache add dhcp git bash libtool libc6-compat && \
+RUN apk --no-cache add dhcp git bash tzdata libtool npm libc6-compat && \
     git clone https://github.com/Akkadius/glass-isc-dhcp.git && \
     cd glass-isc-dhcp && \
     mkdir logs && \
