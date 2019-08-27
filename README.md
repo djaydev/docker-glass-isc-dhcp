@@ -38,7 +38,7 @@ Browse to <http://your-host-ip:3000> to access the Glass Web GUI.
 
 ## Projects used
 
-- <https://hub.docker.com/_/node>
+- <https://github.com/jlesage/docker-baseimage>
 - <https://github.com/Akkadius/glass-isc-dhcp>
 - <https://hub.docker.com/r/joebiellik/dhcpd>
 - <https://hub.docker.com/u/balenalib> (alpine images for ARM platforms)
