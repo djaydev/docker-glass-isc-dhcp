@@ -24,7 +24,7 @@ RUN [ "cross-build-end" ]
 
 FROM arm64v8/alpine:3.10
 
-COPY --from=builder /usr/bin/qemu-arm-static /usr/bin/qemu-arm-static
+COPY --from=builder /usr/bin/qemu-aarch64-static /usr/bin/qemu-aarch64-static
 COPY --from=builder /usr/bin/resin-xbuild /usr/bin/resin-xbuild
 COPY --from=builder /usr/bin/cross-build-start /usr/bin/cross-build-start
 COPY --from=builder /usr/bin/cross-build-end /usr/bin/cross-build-end
