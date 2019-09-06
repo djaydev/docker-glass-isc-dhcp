@@ -32,7 +32,7 @@ COPY --from=builder /usr/bin/cross-build-end /usr/bin/cross-build-end
 RUN [ "cross-build-start" ]
 
 WORKDIR /opt
-RUN apk --no-cache add dhcp git bash tzdata npm libtool libc6-compat && \
+RUN apk --no-cache add dhcp git bash tzdata libtool npm libc6-compat && \
     git clone https://github.com/Akkadius/glass-isc-dhcp.git && \
     cd glass-isc-dhcp && \
     mkdir logs && \
