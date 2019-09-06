@@ -22,7 +22,7 @@ RUN cd /tmp/dhcpd-pools && \
 
 RUN [ "cross-build-end" ]
 
-FROM arm64v8/node:8.16-alpine
+FROM arm64v8/alpine:3.10
 
 COPY --from=builder /usr/bin/qemu-aarch64-static /usr/bin/qemu-aarch64-static
 COPY --from=builder /usr/bin/resin-xbuild /usr/bin/resin-xbuild
@@ -32,12 +32,13 @@ COPY --from=builder /usr/bin/cross-build-end /usr/bin/cross-build-end
 RUN [ "cross-build-start" ]
 
 WORKDIR /opt
-RUN apk --no-cache add dhcp git bash tzdata libtool libc6-compat && \
+RUN apk --no-cache add dhcp git bash tzdata npm libtool libc6-compat && \
     git clone https://github.com/Akkadius/glass-isc-dhcp.git && \
     cd glass-isc-dhcp && \
     mkdir logs && \
     chmod u+x ./bin/ -R && \
     chmod u+x *.sh && \
+    npm config set unsafe-perm true && \
     npm install && \
     npm install forever -g && \
     apk del git libtool && \
