@@ -22,7 +22,7 @@ RUN cd /tmp/dhcpd-pools && \
 
 RUN [ "cross-build-end" ]
 
-FROM arm32v7/alpine
+FROM arm32v7/alpine:3.10
 
 COPY --from=builder /usr/bin/qemu-arm-static /usr/bin/qemu-arm-static
 COPY --from=builder /usr/bin/resin-xbuild /usr/bin/resin-xbuild
