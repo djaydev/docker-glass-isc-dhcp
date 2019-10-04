@@ -1,6 +1,6 @@
 # djaydev/glass-isc-dhcp
 
-FROM jlesage/baseimage:alpine-3.9 AS builder
+FROM jlesage/baseimage:alpine-3.10 AS builder
 
 RUN apk add git wget libtool automake autoconf unzip build-base libc6-compat coreutils
 
@@ -18,7 +18,7 @@ RUN cd /tmp/dhcpd-pools && \
     make check && \
     make install
 
-FROM jlesage/baseimage:alpine-3.9 AS release
+FROM jlesage/baseimage:alpine-3.10 AS release
 
 WORKDIR /opt
 RUN apk --no-cache add dhcp git libtool npm libc6-compat && \
