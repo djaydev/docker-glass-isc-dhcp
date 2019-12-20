@@ -1,6 +1,11 @@
 # djaydev/glass-isc-dhcp:arm64v8
 
-FROM balenalib/generic-aarch64-alpine AS builder
+FROM arm64v8/alpine:3.11 AS builder
+
+COPY --from=balenalib/aarch64-alpine /usr/bin/qemu-aarch64-static /usr/bin/qemu-aarch64-static
+COPY --from=balenalib/aarch64-alpine /usr/bin/resin-xbuild /usr/bin/resin-xbuild
+COPY --from=balenalib/aarch64-alpine /usr/bin/cross-build-start /usr/bin/cross-build-start
+COPY --from=balenalib/aarch64-alpine /usr/bin/cross-build-end /usr/bin/cross-build-end
 
 RUN [ "cross-build-start" ]
 
@@ -22,12 +27,12 @@ RUN cd /tmp/dhcpd-pools && \
 
 RUN [ "cross-build-end" ]
 
-FROM arm64v8/alpine:3.10
+FROM arm64v8/alpine:3.11
 
-COPY --from=builder /usr/bin/qemu-aarch64-static /usr/bin/qemu-aarch64-static
-COPY --from=builder /usr/bin/resin-xbuild /usr/bin/resin-xbuild
-COPY --from=builder /usr/bin/cross-build-start /usr/bin/cross-build-start
-COPY --from=builder /usr/bin/cross-build-end /usr/bin/cross-build-end
+COPY --from=balenalib/aarch64-alpine /usr/bin/qemu-aarch64-static /usr/bin/qemu-aarch64-static
+COPY --from=balenalib/aarch64-alpine /usr/bin/resin-xbuild /usr/bin/resin-xbuild
+COPY --from=balenalib/aarch64-alpine /usr/bin/cross-build-start /usr/bin/cross-build-start
+COPY --from=balenalib/aarch64-alpine /usr/bin/cross-build-end /usr/bin/cross-build-end
 
 RUN [ "cross-build-start" ]
 

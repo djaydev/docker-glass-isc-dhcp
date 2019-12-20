@@ -1,6 +1,6 @@
 # djaydev/glass-isc-dhcp
 
-FROM jlesage/baseimage:alpine-3.10 AS builder
+FROM alpine:3.11 AS builder
 
 RUN apk add git wget libtool automake autoconf unzip build-base libc6-compat coreutils
 
@@ -14,19 +14,20 @@ RUN cd /tmp/dhcpd-pools && \
     cp README.md README && \
     ./bootstrap && \
     ./configure --with-uthash=/tmp/uthash-master/include && \
-    make -j$(nproc) && \
+    make && \
     make check && \
     make install
 
-FROM jlesage/baseimage:alpine-3.10 AS release
+FROM alpine:3.11
 
 WORKDIR /opt
-RUN apk --no-cache add dhcp git libtool npm libc6-compat && \
+RUN apk --no-cache add dhcp git bash tzdata libtool npm libc6-compat && \
     git clone https://github.com/Akkadius/glass-isc-dhcp.git && \
     cd glass-isc-dhcp && \
     mkdir logs && \
     chmod u+x ./bin/ -R && \
     chmod u+x *.sh && \
+    npm config set unsafe-perm true && \
     npm install && \
     npm install forever -g && \
     apk del git libtool && \
@@ -38,8 +39,9 @@ ENV ADMINPASSWORD=glassadmin \
     WEBSOCKETPORT=8080 \
     WEBADMINPORT=3000
 
-# Copy scripts.
-COPY rootfs/ /
-COPY startappx86.sh /startapp.sh
+# Copy the start script.
+COPY startapparm.sh /startapp.sh
+RUN chmod +x /startapp.sh
 
 EXPOSE 67/udp 67/tcp 3000/tcp
+ENTRYPOINT ["/startapp.sh"]
