@@ -2,4 +2,4 @@ FROM alpine:3.11
 
 RUN apk --no-cache add dhcp bash tzdata
 
-CMD /usr/sbin/dhcpd -4 -f -d --no-pid -cf /etc/dhcp/dhcpd.conf > /var/log/dhcp.log 2>&1
+CMD /usr/sbin/dhcpd -4 -f -d --no-pid -cf /etc/dhcp/dhcpd.conf
