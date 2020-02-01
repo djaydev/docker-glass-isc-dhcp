@@ -1,15 +1,23 @@
-#! /bin/sh
+#!/bin/sh
 
 PIDFILE='/var/run/dhcp/dhcpd.pid'
 
 start() {
   echo 'Starting ISC-DHCP-SERVER...'
-  if [ -f "$PIDFILE" ] || $(pidof dhcpd); then
-    echo 'Server is already running' >&2
-    return 1
-  else
+
+  if [ -f "$PIDFILE" ] && [ ! $(pidof dhcpd) ]; then
+    echo 'Stale PID file, removing it.' >&2
+    rm "$PIDFILE"
+  elif [ ! -f "$PIDFILE" ] && [ $(pidof dhcpd) ]; then
+    echo 'Server is already running, but missing PID file.' >&2
+    echo "$(pidof dhcpd)" > "$PIDFILE"
+    echo 'Created new PID file'
+  fi
+  if [ ! -f "$PIDFILE" ] && [ ! $(pidof dhcpd) ]; then
     bash -c '/usr/sbin/dhcpd -4 -f -d -cf /etc/dhcp/dhcpd.conf > /var/log/dhcp.log 2>&1 &'
     echo 'Service started' >&2
+  else
+    echo 'Service is already running.'
   fi
 }
 
