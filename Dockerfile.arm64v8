@@ -55,9 +55,10 @@ ENV ADMINPASSWORD=glassadmin \
     WEBSOCKETPORT=8080 \
     WEBADMINPORT=3000
 
-# Copy the start script.
-COPY startapparm.sh /startapp.sh
-RUN chmod +x /startapp.sh
+# Copy the start scripts.
+COPY startapp.sh /startapp.sh
+COPY service /usr/sbin/service
+RUN chmod +x /startapp.sh /usr/sbin/service
 
 EXPOSE 67/udp 67/tcp 3000/tcp
 ENTRYPOINT ["/startapp.sh"]

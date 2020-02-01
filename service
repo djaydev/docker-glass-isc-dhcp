@@ -1,0 +1,45 @@
+#! /bin/sh
+
+PIDFILE='/var/run/dhcp/dhcpd.pid'
+
+start() {
+  echo 'Starting ISC-DHCP-SERVER...'
+  if [ -f "$PIDFILE" ] || $(pidof dhcpd); then
+    echo 'Server is already running' >&2
+    return 1
+  else
+    bash -c '/usr/sbin/dhcpd -4 -f -d -cf /etc/dhcp/dhcpd.conf > /var/log/dhcp.log 2>&1 &'
+    echo 'Service started' >&2
+  fi
+}
+
+stop() {
+  echo "Stopping ISC-DHCP-SERVER..."
+  if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
+    echo 'Service was not running' >&2
+    return 1
+  else
+    kill -15 $(cat "$PIDFILE") && rm -f "$PIDFILE"
+    echo 'Service stopped' >&2
+  fi
+}
+
+case "$2" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    stop
+    sleep 1
+    start
+    ;;
+  *)
+    echo "Usage: $0 isc-dhcp-server {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0
