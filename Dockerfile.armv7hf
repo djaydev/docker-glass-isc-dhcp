@@ -9,16 +9,16 @@ COPY --from=balenalib/raspberrypi3-alpine /usr/bin/cross-build-end /usr/bin/cros
 
 RUN [ "cross-build-start" ]
 
-RUN apk add git wget libtool automake autoconf unzip build-base libc6-compat coreutils
+RUN apk add git wget libtool automake autoconf unzip build-base libc6-compat coreutils gettext
 
 WORKDIR /tmp
 
-RUN git clone git://git.code.sf.net/p/dhcpd-pools/code dhcpd-pools && \
+RUN git clone https://github.com/Akkadius/dhcpd-pools.git && \
     wget https://github.com/troydhanson/uthash/archive/master.zip && \
     unzip master.zip
 
 RUN cd /tmp/dhcpd-pools && \
-    #cp README.md README && \
+    cp README.md README && \
     ./bootstrap && \
     ./configure --with-uthash=/tmp/uthash-master/include && \
     make && \
