@@ -44,5 +44,5 @@ COPY startapp.sh /startapp.sh
 COPY service /usr/sbin/service
 RUN chmod +x /startapp.sh /usr/sbin/service
 
-EXPOSE 67/udp 67/tcp 3000/tcp
+EXPOSE 67/udp 67/tcp
 ENTRYPOINT ["/startapp.sh"]
