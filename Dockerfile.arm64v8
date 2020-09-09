@@ -1,6 +1,6 @@
 # djaydev/glass-isc-dhcp:arm64v8
 
-FROM arm64v8/alpine:3.12 AS builder
+FROM arm64v8/alpine:3.11 AS builder
 
 COPY --from=balenalib/aarch64-alpine /usr/bin/qemu-aarch64-static /usr/bin/qemu-aarch64-static
 COPY --from=balenalib/aarch64-alpine /usr/bin/resin-xbuild /usr/bin/resin-xbuild
@@ -27,7 +27,7 @@ RUN cd /tmp/dhcpd-pools && \
 
 RUN [ "cross-build-end" ]
 
-FROM arm64v8/alpine:3.12
+FROM arm64v8/alpine:3.11
 
 COPY --from=balenalib/aarch64-alpine /usr/bin/qemu-aarch64-static /usr/bin/qemu-aarch64-static
 COPY --from=balenalib/aarch64-alpine /usr/bin/resin-xbuild /usr/bin/resin-xbuild
