@@ -18,7 +18,7 @@ RUN git clone git://git.code.sf.net/p/dhcpd-pools/code dhcpd-pools && \
     unzip master.zip
 
 RUN cd /tmp/dhcpd-pools && \
-    cp README.md README && \
+    #cp README.md README && \
     ./bootstrap && \
     ./configure --with-uthash=/tmp/uthash-master/include && \
     make && \
