@@ -1,33 +1,6 @@
 # djaydev/glass-isc-dhcp:armv7hf
 
-FROM arm32v7/alpine:3.12 AS builder
-
-COPY --from=balenalib/raspberrypi3-alpine /usr/bin/qemu-arm-static /usr/bin/qemu-arm-static
-COPY --from=balenalib/raspberrypi3-alpine /usr/bin/resin-xbuild /usr/bin/resin-xbuild
-COPY --from=balenalib/raspberrypi3-alpine /usr/bin/cross-build-start /usr/bin/cross-build-start
-COPY --from=balenalib/raspberrypi3-alpine /usr/bin/cross-build-end /usr/bin/cross-build-end
-
-RUN [ "cross-build-start" ]
-
-RUN apk add git wget libtool automake autoconf unzip build-base libc6-compat coreutils libc-dev
-
-WORKDIR /tmp
-
-RUN git clone https://github.com/Akkadius/dhcpd-pools.git && \
-    wget https://github.com/troydhanson/uthash/archive/master.zip && \
-    unzip master.zip
-
-RUN cd /tmp/dhcpd-pools && \
-    cp README.md README && \
-    ./bootstrap && \
-    ./configure --with-uthash=/tmp/uthash-master/include && \
-    make && \
-    make check && \
-    make install
-
-RUN [ "cross-build-end" ]
-
-FROM arm32v7/alpine:3.12
+FROM arm32v7/debian:buster-slim
 
 COPY --from=balenalib/raspberrypi3-alpine /usr/bin/qemu-arm-static /usr/bin/qemu-arm-static
 COPY --from=balenalib/raspberrypi3-alpine /usr/bin/resin-xbuild /usr/bin/resin-xbuild
@@ -37,18 +10,24 @@ COPY --from=balenalib/raspberrypi3-alpine /usr/bin/cross-build-end /usr/bin/cros
 RUN [ "cross-build-start" ]
 
 WORKDIR /opt
-RUN apk --no-cache add dhcp git bash tzdata libtool npm libc6-compat && \
-    git clone https://github.com/Akkadius/glass-isc-dhcp.git && \
-    cd glass-isc-dhcp && \
-    mkdir logs && \
-    chmod u+x ./bin/ -R && \
-    chmod u+x *.sh && \
-    npm install && \
-    npm install forever -g && \
-    apk del git libtool && \
-    rm -rf /var/cache/apk/* /tmp/* /tmp/.[!.]* /opt/glass-isc-dhcp/.git
 
-COPY --from=builder /usr/local/bin/dhcpd-pools /opt/glass-isc-dhcp/bin/
+RUN apt update && \
+    DEBIAN_FRONTEND=noninteractive apt install \
+    git npm isc-dhcp-server tzdata libtool -y && \
+  git clone https://github.com/Akkadius/glass-isc-dhcp.git && \
+  cd glass-isc-dhcp && \
+  mkdir logs && \
+  chmod u+x ./bin/ -R && \
+  chmod u+x *.sh && \
+  npm install && \
+  npm install forever -g && \
+    # Cleanup
+    apt-get remove git libtool -y && \
+    apt-get autoremove -y && \
+    apt-get autoclean -y && \
+    apt-get clean -y && \
+    apt-get purge -y && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /opt/glass-isc-dhcp/.git
 
 ENV ADMINPASSWORD=glassadmin \
     WEBSOCKETPORT=8080 \
