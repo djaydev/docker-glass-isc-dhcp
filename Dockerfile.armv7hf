@@ -20,6 +20,7 @@ RUN apt update && \
   chmod u+x ./bin/ -R && \
   chmod u+x *.sh && \
   npm config set unsafe-perm true && \
+  npm config set strict-ssl false && \
   npm install && \
   npm install forever -g && \
     # Cleanup
