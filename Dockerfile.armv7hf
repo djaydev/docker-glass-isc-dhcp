@@ -9,7 +9,7 @@ COPY --from=balenalib/raspberrypi3-alpine /usr/bin/cross-build-end /usr/bin/cros
 
 RUN [ "cross-build-start" ]
 
-RUN apk add git wget libtool automake autoconf unzip build-base libc6-compat coreutils gettext
+RUN apk add git wget libtool automake autoconf unzip build-base libc6-compat coreutils libc-dev
 
 WORKDIR /tmp
 
