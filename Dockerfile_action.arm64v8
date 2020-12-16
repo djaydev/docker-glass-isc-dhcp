@@ -18,7 +18,7 @@ RUN cd /tmp/dhcpd-pools && \
     make check && \
     make install
 
-FROM arm64v8/alpine:3.13
+FROM arm64v8/alpine:3.12
 
 WORKDIR /opt
 RUN apk --no-cache add dhcp git bash tzdata libtool npm libc6-compat && \
