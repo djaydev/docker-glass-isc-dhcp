@@ -6,7 +6,7 @@ RUN apk add git wget libtool automake autoconf unzip build-base libc6-compat cor
 
 WORKDIR /tmp
 
-RUN git clone git://git.code.sf.net/p/dhcpd-pools/code && \
+RUN git clone git://git.code.sf.net/p/dhcpd-pools/code /tmp/dhcpd-pools && \
     wget https://github.com/troydhanson/uthash/archive/master.zip && \
     unzip master.zip
 
